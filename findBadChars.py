@@ -5,15 +5,21 @@ from struct import pack
 import time
 import os
 
-#modify the encoded PowerShell command and os.startfile with the correct process names before running the script.
+# After the script runs you will need to remove the bad chars from the "badchars" array and manually run the POC to make sure that there are no other bad chars(sometimes chars are bad but they still cause the application to crash).
 
-#run this script as admin if the target process is also being run as admin.
+#TO MODIFY:
+# modify network request to fit your POC
+# modify the encoded PowerShell command and os.startfile with the correct process names before running the script.
+
+# run this script as admin if the target process is also being run as admin.
 # Adjust s.settimeout and time.sleep if necessary
 
 # Script flow:
 # send request
 # did server crash? --yes, char is likely good, restart process
 #                   --no, char is likely bad
+
+
 
 
 badchars = (
